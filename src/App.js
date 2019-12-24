@@ -36,7 +36,7 @@ const App = (props) => {
       })
 
       window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
+        'loggedBlogappUser', JSON.stringify(user)
       ) 
 
       blogService.setToken(user.token)
@@ -49,6 +49,14 @@ const App = (props) => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const handleLogout = async(event) =>
+  {
+    event.preventDefault()
+    setUser(null)
+    blogService.setToken(null)
+    window.localStorage.removeItem('loggedBlogappUser')
   }
 
   const loginForm = () => (
@@ -85,6 +93,7 @@ const App = (props) => {
         loginForm() : 
         <div>
           <h2>blogs</h2>
+          <p>{ user.name } logged in <button onClick={handleLogout}>logout</button></p>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
