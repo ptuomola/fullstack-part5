@@ -8,6 +8,7 @@ import blogService from './services/blogs'
 const App = (props) => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -44,8 +45,11 @@ const App = (props) => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setIsError(false)
+      setErrorMessage('login successful')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setIsError(true)
+      setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -58,6 +62,8 @@ const App = (props) => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('loggedBlogappUser')
+    setIsError(false)
+    setErrorMessage('logged out')
   }
 
   const loginForm = () => (
@@ -89,13 +95,13 @@ const App = (props) => {
 
   return (
     <div>
-      <Notification message={errorMessage}/>
+      <Notification message={errorMessage} isError={isError}/>
       {user === null ? 
         loginForm() : 
         <div>
           <h2>blogs</h2>
           <p>{ user.name } logged in <button onClick={handleLogout}>logout</button></p>
-          <CreateBlog blogs={blogs} setBlogs={(newBlogs) => setBlogs(newBlogs)}/>
+          <CreateBlog blogs={blogs} setBlogs={(newBlogs) => setBlogs(newBlogs)} setErrorMessage={(message) => setErrorMessage(message)} setIsError={(isError) => setIsError(isError)}/>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import blogService from '../services/blogs'
 
-const CreateBlog = ({blogs, setBlogs}) => 
+const CreateBlog = ({blogs, setBlogs, setErrorMessage, setIsError}) => 
 {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -19,12 +19,19 @@ const CreateBlog = ({blogs, setBlogs}) =>
       setAuthor('')
       setURL('')
       setBlogs(blogs.concat(newBlog))
+
+      setIsError(false)
+      setErrorMessage(`a new blog ${title} by ${author} added`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     } catch (exception) {
-//      setErrorMessage('create failed')
-      console.log(exception)
-//      setTimeout(() => {
-//        setErrorMessage(null)
-//      }, 5000)
+        setIsError(true)
+        setErrorMessage('create failed')
+        console.log(exception)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
     }
   }
 
