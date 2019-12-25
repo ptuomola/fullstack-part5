@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog'
+import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
 import loginService from './services/login'
 import blogService from './services/blogs'
@@ -94,6 +95,7 @@ const App = (props) => {
         <div>
           <h2>blogs</h2>
           <p>{ user.name } logged in <button onClick={handleLogout}>logout</button></p>
+          <CreateBlog blogs={blogs} setBlogs={(newBlogs) => setBlogs(newBlogs)}/>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
