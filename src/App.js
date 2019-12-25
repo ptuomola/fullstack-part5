@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 
@@ -56,6 +57,35 @@ const App = (props) => {
     }
   }
 
+  const newNoteRef = React.createRef()
+
+  const handleCreate = async (title, author, url) => {
+    try
+    {
+      const newBlog = await blogService.create({
+        title, author, url,
+      })
+
+      newNoteRef.current.toggleVisibility()
+
+      setBlogs(blogs.concat(newBlog))
+
+      setIsError(false)
+      setErrorMessage(`a new blog ${title} by ${author} added`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+     
+    } catch (exception) {
+      setIsError(true)
+      setErrorMessage('create failed')
+      console.log(exception)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const handleLogout = async(event) =>
   {
     event.preventDefault()
@@ -101,7 +131,9 @@ const App = (props) => {
         <div>
           <h2>blogs</h2>
           <p>{ user.name } logged in <button onClick={handleLogout}>logout</button></p>
-          <CreateBlog blogs={blogs} setBlogs={(newBlogs) => setBlogs(newBlogs)} setErrorMessage={(message) => setErrorMessage(message)} setIsError={(isError) => setIsError(isError)}/>
+          <Togglable buttonLabel="new note" ref={newNoteRef}>
+            <CreateBlog handleCreate={handleCreate}/>
+          </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
