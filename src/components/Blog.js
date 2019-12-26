@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike, handleRemove, user}) => {
+import PropTypes from 'prop-types'
+
+const Blog = ({ blog, handleLike, handleRemove, user }) => {
   const [showDetail, setShowDetail] = useState(false)
 
-  const toggleDetail = (event) => {
-      setShowDetail(!showDetail)
+  const toggleDetail = () => {
+    setShowDetail(!showDetail)
   }
 
   const blogStyle = {
@@ -17,22 +19,29 @@ const Blog = ({ blog, handleLike, handleRemove, user}) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={(event) => toggleDetail(event)}>
+      <div onClick={() => toggleDetail()}>
         {blog.title} {blog.author}
-        { showDetail ? 
-        <div>
-          <a href={blog.url}>{blog.url}</a><br/>
-          {blog.likes} likes <button onClick={(event) => handleLike(blog, event)}>like</button><br/>
-          added by {blog.user.name}<br/>
-          { user.username === blog.user.username  ? 
-          <button onClick={(event) => handleRemove(blog, event)}>remove</button>
-          : "" }
-        </div>
-        : <div></div>
+        { showDetail ?
+          <div>
+            <a href={blog.url}>{blog.url}</a><br/>
+            {blog.likes} likes <button onClick={(event) => handleLike(blog, event)}>like</button><br/>
+            added by {blog.user.name}<br/>
+            { user.username === blog.user.username ?
+              <button onClick={(event) => handleRemove(blog, event)}>remove</button>
+              : '' }
+          </div>
+          : <div></div>
         }
       </div>
     </div>
   )
-}  
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
+}
 
 export default Blog

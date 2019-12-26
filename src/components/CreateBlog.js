@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 
-const CreateBlog = ({handleCreate}) => 
+import PropTypes from 'prop-types'
+
+const CreateBlog = ({ handleCreate }) =>
 {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -8,20 +10,19 @@ const CreateBlog = ({handleCreate}) =>
 
   const submitNewNote = async (event) => {
     event.preventDefault()
-    
     handleCreate(title, author, url)
     setTitle('')
     setAuthor('')
     setURL('')
   }
 
-  return (  
+  return (
     <div>
       <h2>create new</h2>
       <form onSubmit={submitNewNote}>
         <div>
           title:
-            <input
+          <input
             type="text"
             value={title}
             name="Title"
@@ -30,7 +31,7 @@ const CreateBlog = ({handleCreate}) =>
         </div>
         <div>
           author:
-            <input
+          <input
             type="text"
             value={author}
             name="Author"
@@ -39,7 +40,7 @@ const CreateBlog = ({handleCreate}) =>
         </div>
         <div>
           url:
-            <input
+          <input
             type="text"
             value={url}
             name="Url"
@@ -49,8 +50,13 @@ const CreateBlog = ({handleCreate}) =>
 
         <button type="submit">create</button>
       </form>
-    </div>      
+    </div>
   )
 }
+
+CreateBlog.propTypes = {
+  handleCreate: PropTypes.func.isRequired,
+}
+
 
 export default CreateBlog

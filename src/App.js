@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
@@ -6,7 +6,7 @@ import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
 
-const App = (props) => {
+const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [isError, setIsError] = useState(false)
@@ -40,7 +40,7 @@ const App = (props) => {
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
 
       blogService.setToken(user.token)
       setUser(user)
@@ -75,7 +75,7 @@ const App = (props) => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-     
+
     } catch (exception) {
       setIsError(true)
       setErrorMessage('create failed')
@@ -102,7 +102,7 @@ const App = (props) => {
       <form onSubmit={handleLogin}>
         <div>
           username
-            <input
+          <input
             type="text"
             value={username}
             name="Username"
@@ -111,7 +111,7 @@ const App = (props) => {
         </div>
         <div>
           password
-            <input
+          <input
             type="password"
             value={password}
             name="Password"
@@ -120,7 +120,7 @@ const App = (props) => {
         </div>
         <button type="submit">login</button>
       </form>
-    </div>      
+    </div>
   )
 
   const handleLike = async(blog, event) => {
@@ -133,11 +133,10 @@ const App = (props) => {
   const handleRemove = async(blog, event) => {
     event.stopPropagation()
 
-    if(!window.confirm("remove blog " + blog.title + " by " + blog.author))
+    if(!window.confirm('remove blog ' + blog.title + ' by ' + blog.author))
       return
 
-    try 
-    {
+    try {
       await blogService.remove(blog)
       setBlogs(blogs.filter(i => i.id !== blog.id))
 
@@ -146,7 +145,7 @@ const App = (props) => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-   
+
     } catch (exception) {
       setIsError(true)
       setErrorMessage('remove failed')
@@ -160,8 +159,8 @@ const App = (props) => {
   return (
     <div>
       <Notification message={errorMessage} isError={isError}/>
-      {user === null ? 
-        loginForm() : 
+      {user === null ?
+        loginForm() :
         <div>
           <h2>blogs</h2>
           <p>{ user.name } logged in <button onClick={handleLogout}>logout</button></p>
@@ -172,9 +171,9 @@ const App = (props) => {
             <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
           )}
         </div>
-      }    
+      }
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
