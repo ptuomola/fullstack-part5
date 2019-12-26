@@ -15,7 +15,7 @@ const App = (props) => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -130,6 +130,32 @@ const App = (props) => {
     setBlogs(blogs.map(i => i.id === blog.id ? blog : i))
   }
 
+  const handleRemove = async(blog, event) => {
+    event.stopPropagation()
+
+    if(!window.confirm("remove blog " + blog.title + " by " + blog.author))
+      return
+
+    try 
+    {
+      await blogService.remove(blog)
+      setBlogs(blogs.filter(i => i.id !== blog.id))
+
+      setIsError(false)
+      setErrorMessage(`blog ${blog.title} by ${blog.author} removed`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+   
+    } catch (exception) {
+      setIsError(true)
+      setErrorMessage('remove failed')
+      console.log(exception)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   return (
     <div>
@@ -143,7 +169,7 @@ const App = (props) => {
             <CreateBlog handleCreate={handleCreate}/>
           </Togglable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+            <Blog key={blog.id} blog={blog} handleLike={handleLike} handleRemove={handleRemove} user={user}/>
           )}
         </div>
       }    

@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike}) => {
+const Blog = ({ blog, handleLike, handleRemove, user}) => {
   const [showDetail, setShowDetail] = useState(false)
 
   const toggleDetail = (event) => {
       setShowDetail(!showDetail)
   }
-
 
   const blogStyle = {
     paddingTop: 10,
@@ -24,7 +23,10 @@ const Blog = ({ blog, handleLike}) => {
         <div>
           <a href={blog.url}>{blog.url}</a><br/>
           {blog.likes} likes <button onClick={(event) => handleLike(blog, event)}>like</button><br/>
-          added by {blog.user.name}
+          added by {blog.user.name}<br/>
+          { user.username === blog.user.username  ? 
+          <button onClick={(event) => handleRemove(blog, event)}>remove</button>
+          : "" }
         </div>
         : <div></div>
         }
