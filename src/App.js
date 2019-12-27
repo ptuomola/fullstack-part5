@@ -5,13 +5,14 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import loginService from './services/login'
 import blogService from './services/blogs'
+import { useField, filterAttr } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [isError, setIsError] = useState(false)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -35,7 +36,8 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username: username.value,
+        password: password.value
       })
 
       window.localStorage.setItem(
@@ -43,12 +45,14 @@ const App = () => {
       )
 
       blogService.setToken(user.token)
+      username.reset()
+      password.reset()
       setUser(user)
-      setUsername('')
-      setPassword('')
       setIsError(false)
       setErrorMessage('login successful')
     } catch (exception) {
+      username.reset()
+      password.reset()
       setIsError(true)
       setErrorMessage('wrong username or password')
       setTimeout(() => {
@@ -65,6 +69,8 @@ const App = () => {
       const newBlog = await blogService.create({
         title, author, url,
       })
+
+      newBlog.user = user
 
       newNoteRef.current.toggleVisibility()
 
@@ -102,21 +108,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...filterAttr(username)} />
         </div>
         <div>
           password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...filterAttr(password)} />
         </div>
         <button type="submit">login</button>
       </form>

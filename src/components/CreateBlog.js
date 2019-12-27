@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-
+import React from 'react'
+import { useField, filterAttr } from '../hooks'
 import PropTypes from 'prop-types'
 
 const CreateBlog = ({ handleCreate }) =>
 {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setURL] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   const submitNewNote = async (event) => {
     event.preventDefault()
-    handleCreate(title, author, url)
-    setTitle('')
-    setAuthor('')
-    setURL('')
+    handleCreate(title.value, author.value, url.value)
+    title.reset()
+    author.reset()
+    url.reset()
   }
 
   return (
@@ -22,30 +22,15 @@ const CreateBlog = ({ handleCreate }) =>
       <form onSubmit={submitNewNote}>
         <div>
           title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <input {...filterAttr(title)} />
         </div>
         <div>
           author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <input {...filterAttr(author)} />
         </div>
         <div>
           url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setURL(target.value)}
-          />
+          <input {...filterAttr(url)} />
         </div>
 
         <button type="submit">create</button>
