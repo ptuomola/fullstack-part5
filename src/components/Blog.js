@@ -19,7 +19,7 @@ const Blog = ({ blog, handleLike, handleRemove, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={() => toggleDetail()}>
+      <div className="clickableRow" onClick={() => toggleDetail()}>
         {blog.title} {blog.author}
         { showDetail ?
           <div>
